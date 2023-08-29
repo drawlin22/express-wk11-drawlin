@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
+const {v4: uuidv4} = require('uuid');
 
 const fs = require('fs');
-const { title } = require('process');
 
 const PORT = 3001;
 
@@ -15,46 +15,79 @@ app.use(express.static('public'));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/public/index.html'))
-}),
+});
 
-app.get('/api/notes', (req, res) => {
+app.get('/notes', (req, res) => {
 console.log('Get/notes');
   res.sendFile(path.join(__dirname, '/public/notes.html'))
-}),
+});
 
-app.post('/', (req, res) => {
+app.get('/api/notes', (req, res) => {
+    fs.readFile('./db/db.json', "utf8", (err, data) => {
+        if (err) {
+            res.status(500).json(err)
+        } else {
+            res.json(JSON.parse(data))
+        }
+    })
+})
+
+app.get('/notes', (req, res) => {
+    console.log('Get notes');
+    var data = fs.readFileSync("db.json");
+    var notes = JSON.parse(data);
+    res.json(notes);   
+  });
+
+app.post('/api/notes', (req, res) => {
   
-    const { notetitle, noteText, errors } = req.body;
+    const { title, text} = req.body;
   
+    if (title && text) {
     const newNote = {
+        id: uuidv4(),
         title,
         text,
-    };
-  
-    {
-      readAndAppend(newNote, './db/app.json');
-      res.json(`Note information added 🔧`);
-    } 
+    }
 
     fs.readFile('./db/db.json', 'utf8', (err,data) => {
         if(err) {
-            console.error(err);
+            res.status(500).json(err); /* console log errors */
         } else {
             const parsedNotes = JSON.parse(data);
-
-            parsedNotes = JSON.push(title, text);
-        }
-    })
-
+            parsedNotes.push(newNote);
+        
+    
     fs.writeFile('./db/db.json', JSON.stringify(parsedNotes),
-    (writeErr) =>
-    writeErr ? console.err(writeErr)
-    : console.info('Successfully updated notes!')
+    (err) =>
+    err ? res.status(500).json(err) /* console log errors */
+    : res.status(201).json('Successfully updated notes!')
     )
+    }
+    })
+    }
+  })
 
+  app.delete ('/api/notes/:id', (req, res) => {
+  fs.readFile('./db/db.json', 'utf8', (err,data) => {
+    if (err) {
+        res.status(500).json(err)
+    } else {
+const parsedNotes = JSON.parse(data)
+const filteredNotes = parsedNotes.filter(note => note.id !== req.params.id)
+fs.writeFile('./db/db.json', JSON.stringify(filteredNotes), (err) =>
+err 
+? res.status (500).json(err)
+: res.status(200).json('db.json updated')
+)
+    }
+  })
+})
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'))
   });
-
 
 app.listen(PORT, () => {
   console.log(`App listening at http://localhost:${PORT}`)
-});
+})
