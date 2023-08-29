@@ -39,7 +39,7 @@ app.get('/notes', (req, res) => {
     res.json(notes);   
   });
 
-app.post('/api/notes', (req, res) => {
+app.post('/api/notes', (req, res) => { /* pushing a new note post */
   
     const { title, text} = req.body;
   
@@ -68,7 +68,7 @@ app.post('/api/notes', (req, res) => {
     }
   })
 
-  app.delete ('/api/notes/:id', (req, res) => {
+  app.delete ('/api/notes/:id', (req, res) => { /* removing posts */
   fs.readFile('./db/db.json', 'utf8', (err,data) => {
     if (err) {
         res.status(500).json(err)
