@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static('public'));
+app.use(express.static('public')); /* using express to set the public folder as the folder to hold static (non changing) files */
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/public/index.html'))
