@@ -1,6 +1,6 @@
 # express-wk11-drawlin
 
-Readme Generator:
+Note Taker Application
 
 Description: This project was to create a note taker application that takes user input to update the appliation. Responses are collected from the user to fill in a note title as well as note text.
 
