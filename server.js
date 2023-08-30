@@ -13,11 +13,11 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public')); /* using express to set the public folder as the folder to hold static (non changing) files */
 
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {  /* when the route handler is called the index.HTML file is sent back to the user */    
   res.sendFile(path.join(__dirname, '/public/index.html'))
 });
 
-app.get('/notes', (req, res) => {
+app.get('/notes', (req, res) => {  /* when the route handler is called the notes.HTML file is sent back to the user */ 
 console.log('Get/notes');
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 });
