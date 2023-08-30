@@ -25,7 +25,7 @@ console.log('Get/notes');
 app.get('/api/notes', (req, res) => {
     fs.readFile('./db/db.json', "utf8", (err, data) => {
         if (err) {
-            res.status(500).json(err)
+            res.status(500).json(err) /* sends error response with a status code of 500 */
         } else {
             res.json(JSON.parse(data))
         }
@@ -52,7 +52,7 @@ app.post('/api/notes', (req, res) => { /* pushing a new note post */
 
     fs.readFile('./db/db.json', 'utf8', (err,data) => {
         if(err) {
-            res.status(500).json(err); /* console log errors */
+            res.status(500).json(err); /* sends error response with a status code of 500 */
         } else {
             const parsedNotes = JSON.parse(data);
             parsedNotes.push(newNote);
@@ -60,7 +60,7 @@ app.post('/api/notes', (req, res) => { /* pushing a new note post */
     
     fs.writeFile('./db/db.json', JSON.stringify(parsedNotes),
     (err) =>
-    err ? res.status(500).json(err) /* console log errors */
+    err ? res.status(500).json(err) /* sends error response with a status code of 500 */
     : res.status(201).json('Successfully updated notes!')
     )
     }
@@ -71,13 +71,13 @@ app.post('/api/notes', (req, res) => { /* pushing a new note post */
   app.delete ('/api/notes/:id', (req, res) => { /* removing posts */
   fs.readFile('./db/db.json', 'utf8', (err,data) => {
     if (err) {
-        res.status(500).json(err)
+        res.status(500).json(err) /* sends error response with a status code of 500 */
     } else {
 const parsedNotes = JSON.parse(data)
 const filteredNotes = parsedNotes.filter(note => note.id !== req.params.id)
 fs.writeFile('./db/db.json', JSON.stringify(filteredNotes), (err) =>
 err 
-? res.status (500).json(err)
+? res.status (500).json(err) /* sends error response with a status code of 500 */
 : res.status(200).json('db.json updated')
 )
     }
@@ -88,6 +88,6 @@ err
     res.sendFile(path.join(__dirname, '/public/index.html'))
   });
 
-app.listen(PORT, () => {
+app.listen(PORT, () => { /* listen for connections on a host and port */
   console.log(`App listening at http://localhost:${PORT}`)
 })
